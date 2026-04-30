@@ -1,3 +1,35 @@
+:root {
+  --c-bg: #07090E;
+  --c-surface: rgba(255,255,255,0.03);
+  --c-surface-hover: rgba(255,255,255,0.06);
+  --c-border: rgba(255,255,255,0.06);
+  --c-text: #F0F2F5;
+  --c-muted: #7A8599;
+  --c-accent: #06B6D4;
+  --c-accent2: #22D3EE;
+  --f-display: 'Outfit', sans-serif;
+  --f-body: 'Outfit', sans-serif;
+  --f-serif: 'Newsreader', serif;
+  --f-mono: 'IBM Plex Mono', monospace;
+}
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { background: #07090E; }
+body { background: var(--c-bg); }
+
+::selection { background: #06B6D444; color: #fff; }
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--c-accent); border-radius: 2px; }
+
+@keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+@keyframes grain {
+  0%,100%{transform:translate(0,0)}
+  10%{transform:translate(-5%,-10%)}
+  30%{transform:translate(3%,-15%)}
+  50%{transform:translate(-15%,8%)}
+  70%{transform:translate(8%,3%)}
+  90%{transform:translate(-10%,12%)}
+}

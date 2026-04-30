@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
+const SECTIONS = [
+  { id: "hero", label: "Accueil" },
+  { id: "exp", label: "Expériences" },
+  { id: "skills", label: "Compétences" },
+  { id: "education", label: "Formation" },
+  { id: "interests", label: "Intérêts" },
+  { id: "contact", label: "Contact" },
+];
+
 /* ─── DATA ─── */
 const DATA = {
   name: "Van Tien",
@@ -8,16 +17,34 @@ const DATA = {
   location: "Rennes, France",
   email: "van-tien.nguyen@hotmail.fr",
   phone: "07 70 80 70 88",
-  bio: "Après plus de 8 ans d'expérience en développement front-end à Paris, je m'installe à Rennes avec l'envie de m'investir dans de nouveaux projets. Je recherche de nouveaux challenges au sein d'une équipe bienveillante, j'accorde une grande importance à la qualité du code et à l'expérience utilisateur.",
+  bio: "Après plus de 8 ans d'expérience en développement front-end à Paris, je m'installe à Rennes avec l'envie de m'investir dans de nouveaux projets ambitieux. Soucieux de la qualité du code et de l'expérience utilisateur, je recherche une équipe bienveillante où l'exigence technique est une valeur partagée. Disponible en full remote, en hybride, ou en présentiel sur Rennes et ses alentours.",
+  availability: "Full remote · Hybride · Présentiel sur Rennes & alentours",
   stats: [
     { label: "Années d'XP", value: "8+" },
     { label: "Stack principal", value: "Vue 3" },
-    { label: "Disponibilité", value: "Télétravail" },
+    { label: "Hybride & Remote", value: "Flex" },
+  ],
+  education: [
+    {
+      degree: "Titre RNCP Concepteur développeur informatique",
+      school: "Webitech, Paris",
+      period: "09/2015 — 09/2016",
+    },
+    {
+      degree: "Licence Informatique",
+      school: "UVSQ — Université de Versailles Saint-Quentin-en-Yvelines",
+      period: "09/2014 — 12/2015",
+    },
+    {
+      degree: "DUT Informatique",
+      school: "IUT de Belfort-Montbéliard",
+      period: "09/2011 — 09/2013",
+    },
   ],
   experiences: [
     {
       id: 1, role: "Développeur Front-End", company: "Accor, Issy-les-Moulineaux",
-      period: "12/2021 — 11/2025", color: "#FF6B35",
+      period: "12/2021 — 11/2025", color: "#06B6D4",
       highlights: [
         "Migration d'applications web monopage de Vue 2 vers Vue 3, avec modernisation de l'architecture front-end et amélioration de la maintenabilité",
         "Intégration de nouvelles pages du compte client : réservation d'hôtel, fidélité, informations personnelles et souscriptions",
@@ -35,7 +62,7 @@ const DATA = {
     },
     {
       id: 3, role: "Développeur Front-End", company: "Maisons du Monde, Paris",
-      period: "03/2018 — 04/2021", color: "#4ECDC4",
+      period: "03/2018 — 04/2021", color: "#22D3EE",
       highlights: [
         "Intégration de nouvelles fonctionnalités pour la marketplace avec connexion aux services Magento : authentification, informations client, historique des commandes",
         "Refonte de la gestion du compte client en Vue.js avec consommation des APIs via un serveur Apollo GraphQL",
@@ -197,13 +224,6 @@ function NavDots({ sections, active }) {
 /* ─── MAIN ─── */
 export default function CVSite() {
   const d = DATA;
-  const sections = [
-    { id: "hero", label: "Accueil" },
-    { id: "exp", label: "Expériences" },
-    { id: "skills", label: "Compétences" },
-    { id: "interests", label: "Intérêts" },
-    { id: "contact", label: "Contact" },
-  ];
   const [activeSection, setActiveSection] = useState(0);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
@@ -217,18 +237,20 @@ export default function CVSite() {
   }, [handleMouse]);
 
   useEffect(() => {
+    // rootMargin réduit la zone d'observation à une bande centrale de 20% du viewport
+    // ce qui fonctionne aussi bien pour les sections courtes que pour les très longues
     const obs = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) {
-            const idx = sections.findIndex((s) => s.id === e.target.id);
+            const idx = SECTIONS.findIndex((s) => s.id === e.target.id);
             if (idx !== -1) setActiveSection(idx);
           }
         });
       },
-      { threshold: 0.35 }
+      { rootMargin: "-40% 0px -40% 0px", threshold: 0 }
     );
-    sections.forEach((s) => {
+    SECTIONS.forEach((s) => {
       const el = document.getElementById(s.id);
       if (el) obs.observe(el);
     });
@@ -237,42 +259,6 @@ export default function CVSite() {
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--c-bg)", color: "var(--c-text)", fontFamily: "var(--f-body)", lineHeight: 1.6, position: "relative", overflow: "hidden" }}>
-      <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Newsreader:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-      <style>{`
-        :root {
-          --c-bg: #07090E;
-          --c-surface: rgba(255,255,255,0.03);
-          --c-surface-hover: rgba(255,255,255,0.06);
-          --c-border: rgba(255,255,255,0.06);
-          --c-text: #F0F2F5;
-          --c-muted: #7A8599;
-          --c-accent: #FF6B35;
-          --c-accent2: #FFB347;
-          --f-display: 'Outfit', sans-serif;
-          --f-body: 'Outfit', sans-serif;
-          --f-serif: 'Newsreader', serif;
-          --f-mono: 'IBM Plex Mono', monospace;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        html { scroll-behavior: smooth; }
-        @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-        @keyframes fadeUp { from{opacity:0;transform:translateY(32px)} to{opacity:1;transform:translateY(0)} }
-        @keyframes scaleIn { from{opacity:0;transform:scale(0.8)} to{opacity:1;transform:scale(1)} }
-        @keyframes typewriter { from{width:0} to{width:100%} }
-        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-        @keyframes grain {
-          0%,100%{transform:translate(0,0)}
-          10%{transform:translate(-5%,-10%)}
-          30%{transform:translate(3%,-15%)}
-          50%{transform:translate(-15%,8%)}
-          70%{transform:translate(8%,3%)}
-          90%{transform:translate(-10%,12%)}
-        }
-        ::selection { background: #FF6B3544; color: #fff; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--c-accent); border-radius: 2px; }
-      `}</style>
 
       {/* Grain overlay */}
       <div style={{
@@ -287,37 +273,37 @@ export default function CVSite() {
         position: "fixed",
         left: mousePos.x - 200, top: mousePos.y - 200,
         width: 400, height: 400, borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(255,107,53,0.06), transparent 70%)",
+        background: "radial-gradient(circle, rgba(6,182,212,0.06), transparent 70%)",
         pointerEvents: "none", zIndex: 0,
         transition: "left 0.3s ease, top 0.3s ease",
       }} />
 
       {/* Background orbs */}
-      <div style={{ position: "fixed", top: "10%", left: "5%", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, rgba(255,107,53,0.04), transparent)", animation: "float 8s ease-in-out infinite", pointerEvents: "none" }} />
-      <div style={{ position: "fixed", bottom: "15%", right: "8%", width: "350px", height: "350px", borderRadius: "50%", background: "radial-gradient(circle, rgba(78,205,196,0.03), transparent)", animation: "float 10s ease-in-out infinite 2s", pointerEvents: "none" }} />
+      <div style={{ position: "fixed", top: "10%", left: "5%", width: "400px", height: "400px", borderRadius: "50%", background: "radial-gradient(circle, rgba(6,182,212,0.04), transparent)", animation: "float 8s ease-in-out infinite", pointerEvents: "none" }} />
+      <div style={{ position: "fixed", bottom: "15%", right: "8%", width: "350px", height: "350px", borderRadius: "50%", background: "radial-gradient(circle, rgba(34,211,238,0.03), transparent)", animation: "float 10s ease-in-out infinite 2s", pointerEvents: "none" }} />
 
-      <NavDots sections={sections} active={activeSection} />
+      <NavDots sections={SECTIONS} active={activeSection} />
 
       <div style={{ maxWidth: "800px", margin: "0 auto", padding: "0 32px", position: "relative", zIndex: 1 }}>
 
         {/* ═══ HERO ═══ */}
-        <section id="hero" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", paddingBottom: "60px" }}>
+        <section id="hero" style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", paddingBottom: "60px", position: "relative" }}>
           {/* Status badge */}
           <div style={{ animation: "fadeUp 0.6s ease both", marginBottom: "32px" }}>
             <span style={{
               display: "inline-flex", alignItems: "center", gap: "8px",
               padding: "6px 16px", borderRadius: "100px", fontSize: "12px",
-              fontFamily: "var(--f-mono)", background: "rgba(78,205,196,0.1)",
-              color: "#4ECDC4", border: "1px solid rgba(78,205,196,0.2)",
+              fontFamily: "var(--f-mono)", background: "rgba(6,182,212,0.1)",
+              color: "#06B6D4", border: "1px solid rgba(6,182,212,0.2)",
             }}>
-              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#4ECDC4", boxShadow: "0 0 8px #4ECDC4", animation: "blink 2s infinite" }} />
+              <span style={{ width: "6px", height: "6px", borderRadius: "50%", background: "#06B6D4", boxShadow: "0 0 8px #06B6D4", animation: "blink 2s infinite" }} />
               Disponible pour une nouvelle opportunité
             </span>
           </div>
 
           {/* Name */}
           <h1 style={{
-            fontSize: "clamp(48px, 10vw, 88px)", fontFamily: "var(--f-display)", fontWeight: 800,
+            fontSize: "clamp(36px, 7vw, 64px)", fontFamily: "var(--f-display)", fontWeight: 800,
             letterSpacing: "-0.04em", lineHeight: 1,
             background: "linear-gradient(135deg, var(--c-text) 0%, var(--c-muted) 100%)",
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
@@ -374,7 +360,7 @@ export default function CVSite() {
 
           {/* Scroll hint */}
           <div style={{
-            position: "absolute", bottom: "32px", left: "50%", transform: "translateX(-50%)",
+            marginTop: "auto", paddingTop: "48px", paddingBottom: "32px",
             display: "flex", flexDirection: "column", alignItems: "center", gap: "8px",
             animation: "fadeUp 0.6s ease 0.7s both",
           }}>
@@ -405,9 +391,19 @@ export default function CVSite() {
           </div>
         </section>
 
+        {/* ═══ FORMATION ═══ */}
+        <section id="education" style={{ paddingTop: "80px", paddingBottom: "80px" }}>
+          <SectionHeader number="03" title="Formation" subtitle="Diplômes & parcours académique" />
+          <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            {d.education.map((edu, i) => (
+              <EducationCard key={i} edu={edu} index={i} />
+            ))}
+          </div>
+        </section>
+
         {/* ═══ INTERESTS ═══ */}
         <section id="interests" style={{ paddingTop: "80px", paddingBottom: "80px" }}>
-          <SectionHeader number="03" title="Passions" subtitle="Au-delà du code" />
+          <SectionHeader number="04" title="Passions" subtitle="Au-delà du code" />
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "16px" }}>
             {d.interests.map((item, i) => (
               <InterestCard key={i} item={item} index={i} />
@@ -417,10 +413,39 @@ export default function CVSite() {
 
         {/* ═══ CONTACT ═══ */}
         <section id="contact" style={{ paddingTop: "80px", paddingBottom: "100px" }}>
-          <SectionHeader number="04" title="Contact" subtitle="Travaillons ensemble" />
+          <SectionHeader number="05" title="Contact" subtitle="Travaillons ensemble" />
           <ContactBlock data={d} />
         </section>
       </div>
+    </div>
+  );
+}
+
+/* ─── EDUCATION CARD ─── */
+function EducationCard({ edu, index }) {
+  const [ref, visible] = useReveal(0.15);
+  return (
+    <div
+      ref={ref}
+      style={{
+        display: "flex", justifyContent: "space-between", alignItems: "flex-start",
+        flexWrap: "wrap", gap: "8px",
+        padding: "24px 28px", borderRadius: "12px",
+        background: "var(--c-surface)", border: "1px solid var(--c-border)",
+        opacity: visible ? 1 : 0,
+        transform: visible ? "translateY(0)" : "translateY(24px)",
+        transition: `all 0.5s cubic-bezier(0.22,1,0.36,1) ${index * 0.12}s`,
+      }}
+    >
+      <div>
+        <div style={{ fontSize: "15px", fontWeight: 600, color: "var(--c-text)", fontFamily: "var(--f-display)", marginBottom: "4px" }}>{edu.degree}</div>
+        <div style={{ fontSize: "13px", fontFamily: "var(--f-mono)", color: "var(--c-muted)" }}>{edu.school}</div>
+      </div>
+      <span style={{
+        padding: "3px 10px", borderRadius: "100px", fontSize: "12px", whiteSpace: "nowrap",
+        fontFamily: "var(--f-mono)", background: "rgba(6,182,212,0.08)",
+        color: "var(--c-accent)", border: "1px solid rgba(6,182,212,0.15)",
+      }}>{edu.period}</span>
     </div>
   );
 }
@@ -475,11 +500,12 @@ function ContactBlock({ data }) {
     { icon: "✉", label: data.email, href: `mailto:${data.email}` },
     { icon: "☏", label: data.phone, href: `tel:${data.phone}` },
     { icon: "◈", label: data.location, href: null },
+    { icon: "◎", label: data.availability, href: null },
   ];
   return (
     <div ref={ref} style={{
       padding: "40px", borderRadius: "20px",
-      background: "linear-gradient(135deg, var(--c-surface), rgba(255,107,53,0.03))",
+      background: "linear-gradient(135deg, var(--c-surface), rgba(6,182,212,0.03))",
       border: "1px solid var(--c-border)",
       opacity: visible ? 1 : 0, transform: visible ? "translateY(0)" : "translateY(30px)",
       transition: "all 0.6s ease",
@@ -506,8 +532,8 @@ function ContactLink({ icon, label, href, delay, visible }) {
   return (
     <Tag
       href={href || undefined}
-      target={href ? "_blank" : undefined}
-      rel={href ? "noopener noreferrer" : undefined}
+      target={href && !href.startsWith("mailto:") && !href.startsWith("tel:") ? "_blank" : undefined}
+      rel={href && !href.startsWith("mailto:") && !href.startsWith("tel:") ? "noopener noreferrer" : undefined}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       style={{
